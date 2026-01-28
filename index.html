@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش ساخت پروکسی شخصی | Cloudflare Workers</title>
+    
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/misc/Farsi-Digits/font-face.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9', 
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.8;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .code-box {
+            direction: ltr;
+            font-family: monospace;
+        }
+        /* Custom scrollbar for better look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center py-10 px-4 sm:px-6">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-3xl bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-brand-900 to-brand-600 text-white p-8 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                </svg>
+            </div>
+            
+            <div class="relative z-10">
+                <div class="mx-auto w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 border border-white/30">
+                    <i class="ph ph-cloud-lightning text-3xl"></i>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold mb-2">اینترنت آزاد با Cloudflare</h1>
+                <p class="text-brand-100 text-sm sm:text-base max-w-lg mx-auto">
+                   Nimbus
+                </p>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-6 sm:p-10 space-y-12">
+
+            <!-- Intro Section -->
+            <section class="prose prose-slate max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed border-r-4 border-brand-500 pr-4 bg-brand-50 py-3 rounded-l-lg">
+                    در کمتر از ۵ دقیقه، بدون نیاز به سرور مجازی و کاملاً رایگان، فیلترشکن شخصی خودتان را بسازید.
+                </p>
+            </section>
+
+            <!-- Prerequisites -->
+            <section>
+                <h2 class="flex items-center text-xl font-bold text-gray-800 mb-6">
+                    <i class="ph ph-list-checks text-brand-600 ml-2 text-2xl"></i>
+                    پیش‌نیازها
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="flex items-center p-4 bg-white shadow-sm rounded-xl border border-gray-100 hover:border-brand-200 transition">
+                        <div class="bg-blue-50 p-2 rounded-lg ml-3">
+                            <i class="ph ph-envelope-simple text-blue-500 text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">اکانت Cloudflare (ایمیل)</span>
+                    </div>
+                    <div class="flex items-center p-4 bg-white shadow-sm rounded-xl border border-gray-100 hover:border-brand-200 transition">
+                        <div class="bg-purple-50 p-2 rounded-lg ml-3">
+                            <i class="ph ph-code text-purple-500 text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">کد اسکریپت (موجود در پایین)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Steps Timeline -->
+            <section class="space-y-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                
+                <!-- Step 1 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۱</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">ثبت‌نام در کلادفلر</h3>
+                        <p class="text-sm text-gray-600 mb-3">وارد سایت <a href="https://dash.cloudflare.com/sign-up" target="_blank" class="text-brand-600 hover:underline font-medium">Cloudflare</a> شوید و ثبت نام کنید.</p>
+                        <ul class="text-sm text-gray-500 list-disc list-inside space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            <li>گزینه <strong>Sign Up</strong> را بزنید.</li>
+                            <li>ایمیلی که دریافت می‌کنید را تایید (Verify) کنید.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۲</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">ساخت ورکر (Worker)</h3>
+                        <p class="text-sm text-gray-600 mb-2">در پنل کاربری جدید، منوی سمت چپ:</p>
+                        <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 space-y-2 border border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">1</span>
+                                <span>منوی <strong class="text-gray-800">Compute & AI</strong> را باز کنید.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">2</span>
+                                <span>روی <strong>Workers & Pages</strong> کلیک کنید.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">3</span>
+                                <span>دکمه آبی <strong class="text-brand-600">Create application</strong> را بزنید.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">4</span>
+                                <span>دکمه <strong class="text-gray-800">Create Worker</strong> را بزنید.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">5</span>
+                                <span>نام دلخواه بدهید و <strong>Deploy</strong> کنید.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۳</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">ساخت فضای ذخیره‌سازی (KV)</h3>
+                        <p class="text-sm text-gray-600 mb-3">به منوی سمت چپ برگردید و مسیر زیر را بروید:</p>
+                        <div class="font-mono text-xs bg-slate-800 text-white p-2 rounded mb-3 text-center dir-ltr">
+                            Storage & databases > Workers KV
+                        </div>
+                        <p class="text-sm text-gray-600">
+                            روی <strong>Create a Namespace</strong> کلیک کنید.<br>
+                            نام آن را دقیقاً <code class="bg-pink-50 text-pink-600 px-1 rounded font-bold">vpn-data</code> بگذارید و <strong>Add</strong> را بزنید.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۴</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border-2 border-brand-100 bg-brand-50 shadow-sm step-card relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-brand-200 text-brand-800 text-[10px] px-3 py-1 rounded-bl-lg font-bold">بسیار مهم</div>
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">اتصال KV به ورکر</h3>
+                        <p class="text-sm text-gray-600 mb-2">به صفحه ورکری که در مرحله ۲ ساختید برگردید.</p>
+                        <p class="text-sm text-gray-600 mb-2">به تب <strong>Settings</strong> بروید.</p>
+                        
+                        <div class="bg-white p-4 rounded-lg border border-brand-200 text-sm space-y-3 shadow-sm">
+                            <div class="text-xs text-gray-500 mb-1 border-b pb-1">بخش Variables and Secrets را پیدا کنید (یا تب Bindings):</div>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li>بخش <strong>KV Namespace Bindings</strong> را پیدا کنید.</li>
+                                <li>روی <span class="bg-blue-50 text-blue-600 px-1 rounded font-bold">Add binding</span> کلیک کنید.</li>
+                                <li>در پنجره باز شده:</li>
+                            </ul>
+                            <div class="flex justify-between border-t border-gray-100 pt-2">
+                                <span class="text-gray-500">Variable name:</span>
+                                <span class="font-mono font-bold text-xl text-brand-600">C</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500">KV Namespace:</span>
+                                <span class="text-gray-800 text-xs bg-gray-100 px-2 py-1 rounded">انتخاب vpn-data</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-brand-700 font-bold text-center bg-brand-100/50 p-2 rounded">
+                            فراموش نکنید: دکمه Save and Deploy
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۵</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">تنظیم رمز عبور (UUID)</h3>
+                        <p class="text-sm text-gray-600 mb-3">در همان صفحه <strong>Settings</strong>، به بخش <strong>Variables and Secrets</strong> بروید و دکمه <strong>Add</strong> را بزنید:</p>
+                        
+                        <div class="bg-gray-50 p-3 rounded-lg mb-4 border border-gray-100">
+                             <div class="flex justify-between items-center text-sm mb-2 border-b border-gray-200 pb-2">
+                                <span class="text-gray-500">Variable Name:</span>
+                                <span class="font-mono font-bold text-lg text-gray-800">u</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-500">Value:</span>
+                                <span class="text-xs text-gray-400">کدی که در کادر پایین می‌سازید</span>
+                            </div>
+                             <div class="flex justify-between items-center text-sm mt-2 border-t pt-1">
+                                <span class="text-gray-500">Type:</span>
+                                <span class="text-xs bg-gray-200 px-1 rounded">Text (پیش‌فرض)</span>
+                            </div>
+                        </div>
+
+                        <!-- UUID Generator Tool -->
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+                            <label class="text-xs font-bold text-indigo-800 mb-2 block flex justify-between items-center">
+                                <span><i class="ph ph-magic-wand mr-1"></i> ابزار ساخت کد (UUID):</span>
+                                <span id="uuid-status" class="text-green-600 text-xs font-bold opacity-0 transition-opacity duration-300 bg-white px-2 py-0.5 rounded shadow-sm">کپی شد!</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <input type="text" id="uuid-box" readonly class="w-full bg-white border border-indigo-200 text-gray-600 text-xs sm:text-sm rounded-lg px-3 py-2.5 font-mono text-center tracking-wider outline-none cursor-text focus:border-indigo-400 transition" placeholder="برای تولید دکمه را بزنید">
+                                <button onclick="generateAndCopyUUID()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-2 shrink-0 shadow-md active:scale-95 active:bg-indigo-800">
+                                    <span>تولید</span>
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-indigo-400 mt-1">این کد را کپی کرده و در قسمت Value وارد کنید.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-50 group-[.is-active]:bg-brand-500 text-brand-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <span class="font-bold">۶</span>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">قراردادن کد نهایی</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            دکمه <strong>Edit Code</strong> (بالا سمت راست) را بزنید. فایل <code class="font-mono text-xs">worker.js</code> سمت چپ را انتخاب کنید، همه چیز را پاک کنید و کد زیر را جایگزین کنید:
+                        </p>
+                        
+                        <!-- Auto Copy Worker Script Section -->
+                        <div class="bg-slate-900 rounded-xl p-4 text-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="mb-3 text-slate-400 text-xs">برای دریافت کد اسکریپت دکمه زیر را بزنید:</div>
+                                <button onclick="fetchAndCopyWorker()" id="worker-btn" class="w-full bg-white hover:bg-gray-100 text-slate-900 font-bold py-3 px-4 rounded-lg shadow transition flex items-center justify-center gap-2 active:scale-95">
+                                    <i class="ph ph-copy text-xl text-brand-600"></i>
+                                    <span>کپی کردن کد اسکریپت</span>
+                                </button>
+                                <div id="worker-msg" class="text-green-400 text-xs font-bold mt-2 opacity-0 transition-opacity h-4">
+                                    کد با موفقیت کپی شد! در ورکر پیست کنید.
+                                </div>
+                                <div id="worker-err" class="text-red-400 text-xs mt-2 hidden text-justify px-2 leading-tight">
+                                    خطا: فایل worker.js پیدا نشد. لطفا مطمئن شوید فایل worker.js را در کنار index.html در گیت‌هاب آپلود کرده‌اید.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-xs text-gray-500 flex items-center justify-center bg-gray-50 p-2 rounded">
+                            <i class="ph ph-check-circle text-green-500 mr-1 text-lg"></i>
+                            بعد از پیست کردن، دکمه آبی <strong>Deploy</strong> را بزنید.
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Usage Section (Improved with Inputs) -->
+            <section class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl p-6 border border-slate-200 shadow-inner">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="bg-green-100 text-green-600 p-2 rounded-lg ml-3">
+                        <i class="ph ph-rocket-launch text-2xl"></i>
+                    </span>
+                    دریافت لینک اشتراک (Subscription)
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-sm text-gray-600 mb-3 font-medium">برای ساخت لینک، اطلاعات زیر را وارد کنید:</p>
+                        
+                        <div class="grid gap-4">
+                            <!-- Worker URL Input -->
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">آدرس ورکر شما (بدون https):</label>
+                                <input type="text" id="worker-url-input" placeholder="مثال: my-worker.username.workers.dev" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 dir-ltr font-mono" oninput="updateFinalLink()">
+                            </div>
+                            
+                             <!-- UUID Input (Auto-filled) -->
+                             <div>
+                                <label class="block text-xs text-gray-500 mb-1">کد UUID (از مرحله ۵):</label>
+                                <input type="text" id="uuid-input-final" placeholder="کد UUID را اینجا وارد کنید" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 dir-ltr font-mono" oninput="updateFinalLink()">
+                            </div>
+                        </div>
+                        
+                        <!-- Result -->
+                        <div class="mt-6">
+                             <label class="block text-xs font-bold text-brand-600 mb-2">لینک نهایی (کپی کنید):</label>
+                             <div class="relative">
+                                 <textarea id="final-link-box" readonly class="w-full h-24 bg-slate-800 border border-slate-700 text-green-400 text-xs rounded-lg p-3 font-mono break-all focus:outline-none" placeholder="لینک شما اینجا ساخته می‌شود..."></textarea>
+                                 <button onclick="copyFinalLink()" class="absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-white p-2 rounded-md transition text-xs flex items-center gap-1">
+                                     <i class="ph ph-copy"></i> کپی
+                                 </button>
+                             </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="flex items-start bg-yellow-50 p-4 rounded-lg border border-yellow-100 text-yellow-800 text-sm">
+                        <i class="ph ph-info text-xl ml-2 shrink-0"></i>
+                        <p>لینک بالا را در نرم‌افزار <strong>v2rayNG</strong> (اندروید) یا <strong>V2Box</strong> (آیفون) یا <strong>Hiddify</strong> ایمپورت کنید (گزینه Import from Clipboard).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <footer class="text-center pt-8 border-t border-gray-100 pb-4">
+                <div class="inline-block p-4 rounded-xl bg-red-50 border border-red-100 max-w-2xl mx-auto">
+                    <h4 class="text-red-800 font-bold text-sm mb-2 flex items-center justify-center">
+                        <i class="ph ph-warning-octagon ml-2 text-lg"></i> سلب مسئولیت
+                    </h4>
+                    <p class="text-xs text-red-600/80 leading-relaxed text-justify px-2">
+                        این آموزش صرفاً جنبه فنی و تحقیقاتی دارد. مسئولیت استفاده از این ابزار بر عهده کاربر است.
+                    </p>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. UUID Generator ---
+        function generateUUID() {
+            if (window.crypto && window.crypto.randomUUID) {
+                return window.crypto.randomUUID();
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function generateAndCopyUUID() {
+            const uuid = generateUUID();
+            const box = document.getElementById('uuid-box');
+            const finalUuidInput = document.getElementById('uuid-input-final');
+            const status = document.getElementById('uuid-status');
+            
+            box.value = uuid;
+            finalUuidInput.value = uuid; 
+            updateFinalLink(); 
+            
+            box.select();
+            box.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(uuid).then(() => {
+                status.innerText = "کپی شد!";
+                status.classList.remove('opacity-0');
+                setTimeout(() => status.classList.add('opacity-0'), 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+                document.execCommand('copy');
+            });
+        }
+
+        // --- 2. Worker Script Fetcher ---
+        async function fetchAndCopyWorker() {
+            const btn = document.getElementById('worker-btn');
+            const msg = document.getElementById('worker-msg');
+            const errDiv = document.getElementById('worker-err');
+            
+            errDiv.classList.add('hidden');
+            btn.classList.add('opacity-70', 'cursor-wait');
+            
+            try {
+                const response = await fetch('./worker.js');
+                if (!response.ok) throw new Error('File not found');
+                const code = await response.text();
+                if (!code || code.trim().length === 0) throw new Error('Empty file');
+
+                await navigator.clipboard.writeText(code);
+                
+                msg.classList.remove('opacity-0');
+                setTimeout(() => msg.classList.add('opacity-0'), 3000);
+            } catch (error) {
+                console.error(error);
+                errDiv.classList.remove('hidden');
+                if (window.location.protocol === 'file:') {
+                    errDiv.innerText = "هشدار: روی گیت‌هاب تست کنید. مرورگر اجازه خواندن فایل لوکال را نمی‌دهد.";
+                }
+            } finally {
+                btn.classList.remove('opacity-70', 'cursor-wait');
+            }
+        }
+
+        // --- 3. Dynamic Link Builder ---
+        function updateFinalLink() {
+            const domain = document.getElementById('worker-url-input').value.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+            const uuid = document.getElementById('uuid-input-final').value.trim();
+            const resultBox = document.getElementById('final-link-box');
+
+            if (domain && uuid) {
+                // Subscription Link Format: https://domain/uuid
+                const subLink = `https://${domain}/${uuid}`;
+                resultBox.value = subLink;
+            } else {
+                resultBox.value = "";
+            }
+        }
+
+        function copyFinalLink() {
+            const resultBox = document.getElementById('final-link-box');
+            if (!resultBox.value) return;
+            
+            resultBox.select();
+            navigator.clipboard.writeText(resultBox.value).then(() => {
+                const originalText = resultBox.value;
+                const btn = document.querySelector('button[onclick="copyFinalLink()"]');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="ph ph-check"></i> کپی شد';
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
