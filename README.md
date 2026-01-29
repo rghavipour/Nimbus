@@ -4,7 +4,7 @@ A minimal, personal guide for setting up a Cloudflare proxy.
 
 This project is a single-page static website designed to help you set up a personal V2Ray service on Cloudflare Workers' free infrastructure without complex technical steps. It includes a built-in UUID generator and script copier for ease of use.
 
-View Live Demo <!-- Replace with your GitHub Pages link after deployment -->
+View Live Demo
 
 🚀 How to Deploy
 
