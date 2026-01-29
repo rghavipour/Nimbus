@@ -52,6 +52,7 @@
         .code-box {
             direction: ltr;
             font-family: monospace;
+            text-align: left;
         }
         /* Custom scrollbar for better look */
         ::-webkit-scrollbar {
@@ -155,27 +156,27 @@
                     </div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
                         <h3 class="font-bold text-gray-800 mb-3 text-lg">ساخت ورکر (Worker)</h3>
-                        <p class="text-sm text-gray-600 mb-2">در پنل کاربری جدید، منوی سمت چپ:</p>
+                        <p class="text-sm text-gray-600 mb-2">در پنل کاربری، منوی سمت چپ:</p>
                         <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 space-y-2 border border-gray-100">
                             <div class="flex items-center gap-2">
                                 <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">1</span>
-                                <span>منوی <strong class="text-gray-800">Compute & AI</strong> را باز کنید.</span>
+                                <span><strong class="text-gray-800">Compute & AI</strong> > <strong>Workers & Pages</strong></span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">2</span>
-                                <span>روی <strong>Workers & Pages</strong> کلیک کنید.</span>
+                                <span>زدن دکمه <strong class="text-brand-600">Create application</strong> > <strong>Create Worker</strong></span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 bg-blue-50 p-1.5 rounded">
                                 <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">3</span>
-                                <span>دکمه آبی <strong class="text-brand-600">Create application</strong> را بزنید.</span>
+                                <span>انتخاب گزینه <strong class="text-gray-900">Start with Hello World</strong> (مهم)</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">4</span>
-                                <span>دکمه <strong class="text-gray-800">Create Worker</strong> را بزنید.</span>
+                                <span>یک نام دلخواه برای ورکر خود بنویسید (مثلاً my-vpn)</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-mono text-gray-500">5</span>
-                                <span>نام دلخواه بدهید و <strong>Deploy</strong> کنید.</span>
+                                <span>دکمه آبی <strong>Deploy</strong> را بزنید.</span>
                             </div>
                         </div>
                     </div>
@@ -189,12 +190,12 @@
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
                         <h3 class="font-bold text-gray-800 mb-3 text-lg">ساخت فضای ذخیره‌سازی (KV)</h3>
                         <p class="text-sm text-gray-600 mb-3">به منوی سمت چپ برگردید و مسیر زیر را بروید:</p>
-                        <div class="font-mono text-xs bg-slate-800 text-white p-2 rounded mb-3 text-center dir-ltr">
+                        <div class="font-mono text-xs bg-slate-800 text-white p-2 rounded mb-3 text-center code-box">
                             Storage & databases > Workers KV
                         </div>
                         <p class="text-sm text-gray-600">
-                            روی <strong>Create a Namespace</strong> کلیک کنید.<br>
-                            نام آن را دقیقاً <code class="bg-pink-50 text-pink-600 px-1 rounded font-bold">vpn-data</code> بگذارید و <strong>Add</strong> را بزنید.
+                            روی دکمه آبی رنگ <strong>Create Instance</strong> کلیک کنید.<br>
+                            نام آن را دقیقاً <code class="bg-pink-50 text-pink-600 px-1 rounded font-bold">vpn-data</code> بگذارید و ذخیره کنید.
                         </p>
                     </div>
                 </div>
@@ -208,26 +209,24 @@
                         <div class="absolute top-0 right-0 bg-brand-200 text-brand-800 text-[10px] px-3 py-1 rounded-bl-lg font-bold">بسیار مهم</div>
                         <h3 class="font-bold text-gray-800 mb-3 text-lg">اتصال KV به ورکر</h3>
                         <p class="text-sm text-gray-600 mb-2">به صفحه ورکری که در مرحله ۲ ساختید برگردید.</p>
-                        <p class="text-sm text-gray-600 mb-2">به تب <strong>Settings</strong> بروید.</p>
+                        <p class="text-sm text-gray-600 mb-2">این بار وارد تب <strong>Bindings</strong> شوید (کنار تب Settings).</p>
                         
                         <div class="bg-white p-4 rounded-lg border border-brand-200 text-sm space-y-3 shadow-sm">
-                            <div class="text-xs text-gray-500 mb-1 border-b pb-1">بخش Variables and Secrets را پیدا کنید (یا تب Bindings):</div>
                             <ul class="list-disc list-inside space-y-1 text-gray-700">
-                                <li>بخش <strong>KV Namespace Bindings</strong> را پیدا کنید.</li>
-                                <li>روی <span class="bg-blue-50 text-blue-600 px-1 rounded font-bold">Add binding</span> کلیک کنید.</li>
-                                <li>در پنجره باز شده:</li>
+                                <li>روی دکمه <span class="bg-blue-600 text-white px-1.5 py-0.5 rounded text-xs font-bold">Add binding</span> کلیک کنید.</li>
+                                <li>گزینه <strong>KV Namespace</strong> را انتخاب کنید.</li>
                             </ul>
-                            <div class="flex justify-between border-t border-gray-100 pt-2">
+                            <div class="flex justify-between border-t border-gray-100 pt-2 code-box">
                                 <span class="text-gray-500">Variable name:</span>
                                 <span class="font-mono font-bold text-xl text-brand-600">C</span>
                             </div>
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center code-box">
                                 <span class="text-gray-500">KV Namespace:</span>
                                 <span class="text-gray-800 text-xs bg-gray-100 px-2 py-1 rounded">انتخاب vpn-data</span>
                             </div>
                         </div>
                         <div class="mt-3 text-xs text-brand-700 font-bold text-center bg-brand-100/50 p-2 rounded">
-                            فراموش نکنید: دکمه Save and Deploy
+                            در نهایت دکمه Add Binding را بزنید.
                         </div>
                     </div>
                 </div>
@@ -239,9 +238,12 @@
                     </div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-xl border border-slate-200 bg-white shadow-sm step-card">
                         <h3 class="font-bold text-gray-800 mb-3 text-lg">تنظیم رمز عبور (UUID)</h3>
-                        <p class="text-sm text-gray-600 mb-3">در همان صفحه <strong>Settings</strong>، به بخش <strong>Variables and Secrets</strong> بروید و دکمه <strong>Add</strong> را بزنید:</p>
+                        <p class="text-sm text-gray-600 mb-3">
+                            به تب <strong>Settings</strong> بروید و از منوی سمت چپ آن <strong>Variables and Secrets</strong> را انتخاب کنید.
+                        </p>
+                        <p class="text-sm text-gray-600 mb-2">دکمه <strong>Add</strong> را بزنید و متغیر زیر را بسازید:</p>
                         
-                        <div class="bg-gray-50 p-3 rounded-lg mb-4 border border-gray-100">
+                        <div class="bg-gray-50 p-3 rounded-lg mb-4 border border-gray-100 code-box">
                              <div class="flex justify-between items-center text-sm mb-2 border-b border-gray-200 pb-2">
                                 <span class="text-gray-500">Variable Name:</span>
                                 <span class="font-mono font-bold text-lg text-gray-800">u</span>
@@ -250,25 +252,25 @@
                                 <span class="text-gray-500">Value:</span>
                                 <span class="text-xs text-gray-400">کدی که در کادر پایین می‌سازید</span>
                             </div>
-                             <div class="flex justify-between items-center text-sm mt-2 border-t pt-1">
-                                <span class="text-gray-500">Type:</span>
-                                <span class="text-xs bg-gray-200 px-1 rounded">Text (پیش‌فرض)</span>
-                            </div>
                         </div>
 
                         <!-- UUID Generator Tool -->
-                        <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-3">
                             <label class="text-xs font-bold text-indigo-800 mb-2 block flex justify-between items-center">
                                 <span><i class="ph ph-magic-wand mr-1"></i> ابزار ساخت کد (UUID):</span>
                                 <span id="uuid-status" class="text-green-600 text-xs font-bold opacity-0 transition-opacity duration-300 bg-white px-2 py-0.5 rounded shadow-sm">کپی شد!</span>
                             </label>
                             <div class="flex gap-2">
-                                <input type="text" id="uuid-box" readonly class="w-full bg-white border border-indigo-200 text-gray-600 text-xs sm:text-sm rounded-lg px-3 py-2.5 font-mono text-center tracking-wider outline-none cursor-text focus:border-indigo-400 transition" placeholder="برای تولید دکمه را بزنید">
+                                <input type="text" id="uuid-box" readonly dir="ltr" class="w-full bg-white border border-indigo-200 text-gray-600 text-xs sm:text-sm rounded-lg px-3 py-2.5 font-mono text-center tracking-wider outline-none cursor-text focus:border-indigo-400 transition" placeholder="برای تولید دکمه را بزنید">
                                 <button onclick="generateAndCopyUUID()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-2 shrink-0 shadow-md active:scale-95 active:bg-indigo-800">
                                     <span>تولید</span>
                                 </button>
                             </div>
                             <p class="text-[10px] text-indigo-400 mt-1">این کد را کپی کرده و در قسمت Value وارد کنید.</p>
+                        </div>
+                        
+                        <div class="text-xs text-white bg-blue-600 font-bold text-center p-2 rounded shadow-sm">
+                             برای ذخیره، دکمه Deploy را بزنید.
                         </div>
                     </div>
                 </div>
@@ -304,8 +306,10 @@
                         </div>
 
                         <div class="mt-4 text-xs text-gray-500 flex items-center justify-center bg-gray-50 p-2 rounded">
-                            <i class="ph ph-check-circle text-green-500 mr-1 text-lg"></i>
-                            بعد از پیست کردن، دکمه آبی <strong>Deploy</strong> را بزنید.
+                            <i class="ph ph-check-circle text-green-500 ml-2 text-lg"></i>
+                            <span>
+                                بعد از پیست کردن، دکمه آبی <strong class="mx-1 font-bold">Deploy</strong> را بزنید.
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -318,43 +322,49 @@
                     <span class="bg-green-100 text-green-600 p-2 rounded-lg ml-3">
                         <i class="ph ph-rocket-launch text-2xl"></i>
                     </span>
-                    دریافت لینک اشتراک (Subscription)
+                    دریافت لینک پنل (Subscription)
                 </h2>
                 
                 <div class="space-y-6">
                     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                        <p class="text-sm text-gray-600 mb-3 font-medium">برای ساخت لینک، اطلاعات زیر را وارد کنید:</p>
+                        <p class="text-sm text-gray-600 mb-3 font-medium">برای ساخت لینک پنل مدیریت، اطلاعات زیر را وارد کنید:</p>
                         
+                        <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-100 mb-4 text-xs text-yellow-800 flex items-start">
+                            <i class="ph ph-lightbulb text-lg ml-2 shrink-0"></i>
+                            نکته: آدرس ورکر خود را می‌توانید بعد از ساخت، در صفحه اصلی ورکر (بالا سمت راست دکمه Visit یا بخش Preview) پیدا کنید.
+                        </div>
+
                         <div class="grid gap-4">
                             <!-- Worker URL Input -->
                             <div>
                                 <label class="block text-xs text-gray-500 mb-1">آدرس ورکر شما (بدون https):</label>
-                                <input type="text" id="worker-url-input" placeholder="مثال: my-worker.username.workers.dev" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 dir-ltr font-mono" oninput="updateFinalLink()">
+                                <input type="text" id="worker-url-input" dir="ltr" placeholder="example: my-vpn.username.workers.dev" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 font-mono text-left" oninput="updateFinalLink()">
                             </div>
                             
                              <!-- UUID Input (Auto-filled) -->
                              <div>
                                 <label class="block text-xs text-gray-500 mb-1">کد UUID (از مرحله ۵):</label>
-                                <input type="text" id="uuid-input-final" placeholder="کد UUID را اینجا وارد کنید" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 dir-ltr font-mono" oninput="updateFinalLink()">
+                                <input type="text" id="uuid-input-final" dir="ltr" placeholder="UUID code" class="w-full bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2.5 font-mono text-left" oninput="updateFinalLink()">
                             </div>
                         </div>
                         
                         <!-- Result -->
                         <div class="mt-6">
-                             <label class="block text-xs font-bold text-brand-600 mb-2">لینک نهایی (کپی کنید):</label>
+                             <label class="block text-xs font-bold text-brand-600 mb-2">لینک پنل مدیریت (کپی کنید):</label>
                              <div class="relative">
-                                 <textarea id="final-link-box" readonly class="w-full h-24 bg-slate-800 border border-slate-700 text-green-400 text-xs rounded-lg p-3 font-mono break-all focus:outline-none" placeholder="لینک شما اینجا ساخته می‌شود..."></textarea>
+                                 <textarea id="final-link-box" readonly dir="ltr" class="w-full h-24 bg-slate-800 border border-slate-700 text-green-400 text-xs rounded-lg p-3 pr-20 font-mono break-all focus:outline-none text-left" placeholder="لینک پنل شما اینجا ساخته می‌شود..."></textarea>
                                  <button onclick="copyFinalLink()" class="absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-white p-2 rounded-md transition text-xs flex items-center gap-1">
                                      <i class="ph ph-copy"></i> کپی
                                  </button>
                              </div>
+                             <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
+                                <i class="ph ph-check-circle text-green-500"></i>
+                                با باز کردن لینک بالا، وارد <strong>پنل مدیریت</strong> می‌شوید (صفحه مشکی و سبز).<br>
+                                <i class="ph ph-translate text-blue-500"></i>
+                                در پنل، از منوی بالا سمت چپ می‌توانید <strong>زبان فارسی</strong> را انتخاب کنید و سپس کانفیگ مخصوص V2Ray, Clash یا Hiddify را کپی کنید.
+                             </p>
                         </div>
 
-                    </div>
-                    
-                    <div class="flex items-start bg-yellow-50 p-4 rounded-lg border border-yellow-100 text-yellow-800 text-sm">
-                        <i class="ph ph-info text-xl ml-2 shrink-0"></i>
-                        <p>لینک بالا را در نرم‌افزار <strong>v2rayNG</strong> (اندروید) یا <strong>V2Box</strong> (آیفون) یا <strong>Hiddify</strong> ایمپورت کنید (گزینه Import from Clipboard).</p>
                     </div>
                 </div>
             </section>
